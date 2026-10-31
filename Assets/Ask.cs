@@ -32,7 +32,14 @@ public class OpenRouterClient : AIClient
     const string Url = "https://openrouter.ai/api/v1/chat/completions";
 
     public static string ApiKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY");
-    public static string Model = "cohere/north-mini-code:free";
+    public static string[] Models = new string[] 
+    { 
+        "cohere/north-mini-code:free",
+        "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "nvidia/nemotron-3.5-lightning:free",
+        "liquid/lfm-2.5-2.6b:free",
+        "openrouter/free",
+    };
 
     static readonly HttpClient http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
 
@@ -43,14 +50,31 @@ public class OpenRouterClient : AIClient
 
     public async Task<string> SendRequest(string request)
     {
+        foreach (var Model in Models)
+        {
+            try
+            {
+                string response = await TryRequest(request, Model);
+                return response;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Request failed in {Model}: {e.Message}.");
+            }
+        }
+        Debug.LogError("All models failed to respond.");
+        return "Sorry, lets talk later";
+    }
+    public async Task<string> TryRequest(string request, string model)
+    {
         if (string.IsNullOrEmpty(ApiKey))
-            return "Error: OpenRouter API key is not set.";
+            throw new Exception("OpenRouter API key is not set. Please set the OPENROUTER_API_KEY environment variable.");
 
         try
         {
             var body = new RequestBody
             {
-                model = Model,
+                model = model,
                 messages = new[] { new Message { role = "user", content = request } }
             };
 
@@ -63,20 +87,18 @@ public class OpenRouterClient : AIClient
 
             if (!response.IsSuccessStatusCode)
             {
-                Debug.LogError($"OpenRouter error {(int)response.StatusCode}: {json}");
-                return $"Error: {(int)response.StatusCode}";
+                throw new Exception($"Error: {(int)response.StatusCode}: {json}");
             }
 
             var parsed = JsonUtility.FromJson<ResponseBody>(json);
             if (parsed?.choices == null || parsed.choices.Length == 0)
-                return "Error: empty response.";
+                throw new Exception("Error: empty response.");
 
             return parsed.choices[0].message.content.Trim();
         }
         catch (Exception e)
         {
-            Debug.LogError($"OpenRouter request failed: {e.Message}");
-            return "Error: request failed.";
+            throw new Exception($"OpenRouter request failed.{e.Message}");
         }
     }
 }

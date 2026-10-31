@@ -5,7 +5,10 @@ public class ChatScript : MonoBehaviour
 {
     TextMeshProUGUI chatText;
     GameObject LoadingIndicator;
-    bool textGenerated = false;
+    public float typingSpeed = 0.02f;
+    private float typingTimer = 0f;
+    private char[] chars;
+    private int currentCharIndex = 0;
     void Start()
     {
         chatText = GetComponent<TextMeshProUGUI>();
@@ -13,29 +16,30 @@ public class ChatScript : MonoBehaviour
         if (LoadingIndicator == null)
             Debug.LogWarning("LoadingIndicator not found as a child of ChatScript.");
     }
-    async void UpdateChatText(string preprompt, string question, string context)
+    public void PutInLoad()
     {
-        chatText.text = await Ask.AskQuestion(preprompt, question, context);
-        LoadingIndicator?.SetActive(false);
-    }
-    public void Generate()
-    {
-        textGenerated = true;
         LoadingIndicator?.SetActive(true);
-        UpdateChatText("You are really bitchy woman who hates the user.", "Hi, how is it going?", "You walk around the park and you meet your school friend");
+        chatText.text = "";
+        chars = null;
+        currentCharIndex = 0;
     }
-    public void Clear()
+    public void SetText(string text)
     {
-        textGenerated = false;
-        if(chatText != null)
-            chatText.text = "";
         LoadingIndicator?.SetActive(false);
+        chars = text.ToCharArray();
+        currentCharIndex = 0;
     }
     void Update()
     {
-        if(!textGenerated)
+        if (chars != null && currentCharIndex < chars.Length)
         {
-            Generate();
+            typingTimer += Time.deltaTime;
+            if (typingTimer >= typingSpeed)
+            {
+                typingTimer = 0f;
+                chatText.text += chars[currentCharIndex];
+                currentCharIndex++;
+            }
         }
     }
 }
