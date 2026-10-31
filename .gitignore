@@ -1,0 +1,57 @@
+# Unity generated folders and files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Memory-generated files
+[Mm]emoryCaptures/
+
+# Asset import worker cache
+[Aa]sset[Ss]tore-Tools/
+
+# Auto-generated Visual Studio/JetBrains project files
+.vs/
+*.sln
+*.csproj
+*.unityproj
+.suo
+.user
+.userprefs
+.pidb
+.booproj
+
+# Unity crash reports
+sysinfo.txt
+
+# Builds and releases
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.ipa
+*.x86
+*.x86_64
+
+# IDE/editor caches
+.idea/
+.vscode/
+ExportedObj/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# secrets
+*.env
+
+# Not needed
+Assets/AnimeGirls/
+Assets/AnimeGirls.meta
+Assets/TextMesh Pro/
+Assets/TextMesh Pro.meta
+
