@@ -8,7 +8,11 @@ public enum InputType
 public class Moving : MonoBehaviour
 {
     public float speed = 1f;
+    public float runMultiplier = 2f;
     public float jumpForce = 5f;
+    public float crouchHeight = 0.5f;
+    public float crouchSpeedMultiplier = 0.5f;
+    private float originalHeight;
     private Rigidbody rb;
     private Collider col;
     public LayerMask groundMask;
@@ -40,12 +44,28 @@ public class Moving : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        originalHeight = transform.localScale.y;
         inputMode = InputType.Movement;
     }
     private void HandleMovement()
     {
-        transform.position += transform.forward * InputManager.Vertical() * Time.deltaTime * speed;
-        transform.position += transform.right * InputManager.Horizontal() * Time.deltaTime * speed;
+        float localSpeed = speed;
+        if(InputManager.Crouch())
+        {
+            localSpeed *= crouchSpeedMultiplier;
+            transform.localScale = new Vector3(transform.localScale.x, crouchHeight, transform.localScale.z);
+        }
+        else
+        {
+            transform.localScale = new Vector3(transform.localScale.x, originalHeight, transform.localScale.z);
+            if (InputManager.Run())
+            {
+                localSpeed *= runMultiplier;
+            }
+        }
+
+        transform.position += transform.forward * InputManager.Vertical() * Time.deltaTime * localSpeed;
+        transform.position += transform.right * InputManager.Horizontal() * Time.deltaTime * localSpeed;
         if (InputManager.Jump() && IsGrounded())
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);

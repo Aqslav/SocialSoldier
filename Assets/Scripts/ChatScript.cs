@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Threading.Tasks;
+using System.Text;
+
 public class ChatScript : MonoBehaviour
 {
     TextMeshProUGUI chatText;
@@ -25,9 +27,36 @@ public class ChatScript : MonoBehaviour
     }
     public void SetText(string text)
     {
+        text = SafeForTMP(chatText, text);
         LoadingIndicator?.SetActive(false);
         chars = text.ToCharArray();
         currentCharIndex = 0;
+    }
+
+
+
+    private string SafeForTMP(TextMeshProUGUI textBox, string text)
+    {
+        if (string.IsNullOrEmpty(text)) 
+            return string.Empty;
+        TMP_FontAsset font = textBox.font;
+        var sb = new StringBuilder(text.Length);
+        foreach (char c in text)
+        {
+            if (c == '\n' || c == '\r' || c == '\t')
+            {
+                sb.Append(c);
+                continue;
+            }
+            if (char.IsSurrogate(c)) 
+                continue;
+            if (c == '\uFE0F' || c == '\uFE0E' || c == '\u200D' || c == '\u200B') 
+                continue;
+            if (font != null && font.HasCharacter(c, true))
+                sb.Append(c);
+        }
+
+        return sb.ToString().Trim();
     }
     void Update()
     {

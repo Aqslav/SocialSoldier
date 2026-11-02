@@ -18,14 +18,12 @@ public class MenuState : MonoBehaviour
         {
             Debug.LogError("Player object with tag 'Player' not found.");
         }
-        Debug.Log("MenuState initialized.");
     }
     void OnEnable()
     {
         if (movingScript != null)
         {
             movingScript.InputMode = InputType.Menu;
-            Debug.Log("MenuState enabled, switching to Menu mode.");
         }
     }
     void OnDisable()
@@ -33,7 +31,6 @@ public class MenuState : MonoBehaviour
         if (movingScript != null)
         {
             movingScript.InputMode = InputType.Movement;
-            Debug.Log("MenuState disabled, returning to Movement mode.");
         }
     }
 }

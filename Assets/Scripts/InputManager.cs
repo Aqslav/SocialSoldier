@@ -62,4 +62,12 @@ public class InputManager
     {
         return Mouse.current.rightButton.isPressed;
     }
+    public static bool Run()
+    {
+        return Keyboard.current.leftShiftKey.isPressed;
+    }
+    public static bool Crouch()
+    {
+        return Keyboard.current.leftCtrlKey.isPressed;
+    }
 }

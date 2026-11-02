@@ -38,6 +38,11 @@ public class OpenRouterClient : AIClient
         "nvidia/nemotron-3-ultra-550b-a55b:free",
         "nvidia/nemotron-3.5-lightning:free",
         "liquid/lfm-2.5-2.6b:free",
+        "moonshotai/kimi-k2.6:free",
+        "google/gemma-4-26b-a4b-it:free",
+        "google/gemma-4-31b-it:free",
+        "nvidia/nemotron-nano-12b-v2-vl:free",
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "openrouter/free",
     };
 
@@ -55,6 +60,7 @@ public class OpenRouterClient : AIClient
             try
             {
                 string response = await TryRequest(request, Model);
+                Debug.Log($"Successful response from {Model}: {response}");
                 return response;
             }
             catch (Exception e)
@@ -93,7 +99,7 @@ public class OpenRouterClient : AIClient
             var parsed = JsonUtility.FromJson<ResponseBody>(json);
             if (parsed?.choices == null || parsed.choices.Length == 0)
                 throw new Exception("Error: empty response.");
-
+            Debug.Log($"OpenRouter response: {json}");
             return parsed.choices[0].message.content.Trim();
         }
         catch (Exception e)
