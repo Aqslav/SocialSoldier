@@ -52,10 +52,16 @@ public class LookTowardsUser : MonoBehaviour
         float totalAngle = Vector3.SignedAngle(transform.forward, targetRotation * Vector3.forward, transform.up);
         return Quaternion.AngleAxis(-Mathf.Sign(totalAngle) * 90f, transform.up) * transform.rotation;
     }
+    // Тут швидкість поворону залежить від кута повороту, але виглядає реалістичніше
     void TurnTo(Quaternion targetRotation)
     {
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
+    // Тут швидкість поворону не залежить від куту повороту
+    // void TurnTo(Quaternion targetRotation)
+    // {
+    //     transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);    
+    // }
     void Update()
     {
         if(locked && userCamera != null)

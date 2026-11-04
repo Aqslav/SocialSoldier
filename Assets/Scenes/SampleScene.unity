@@ -3411,7 +3411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LookTowardsUser
   locked: 0
-  rotationSpeed: 1
+  rotationSpeed: 2
   maxAngle: 0
   Multiplier: {x: 1, y: 0, z: 1}
   returnToInitialRotation: 0
@@ -5400,7 +5400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LookTowardsUser
   locked: 0
-  rotationSpeed: 3
+  rotationSpeed: 4
   maxAngle: 0
   Multiplier: {x: 1, y: 1, z: 1}
   returnToInitialRotation: 1
