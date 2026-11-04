@@ -47,7 +47,6 @@ public class OpenRouterClient : AIClient
     };
 
     static readonly HttpClient http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
-
     [Serializable] class Message      { public string role; public string content; }
     [Serializable] class RequestBody  { public string model; public Message[] messages; }
     [Serializable] class Choice       { public Message message; }
